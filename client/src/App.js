@@ -3,21 +3,14 @@ import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className=" App-header flex flex-row">
+      <aside className='w-[250px]  h-[100vh] bg-[#1c1f24]'>
+        <h1>Aside</h1>
+      </aside>
+      <section className='flex-1 '>
+
+      </section>
+      
     </div>
   );
 }
