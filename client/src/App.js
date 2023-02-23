@@ -1,8 +1,39 @@
 import logo from './logo.svg';
 import './App.css';
 import SvgComponent from './components/SvgComponent';
+import { RxPaperPlane } from 'react-icons/rx';
+import { useState } from 'react';
+import ChatMessage from './components/ChatMessage';
+
 
 function App() {
+  const [input,setInput]=useState('')
+  const [chatLog,setChatLog] = useState([{
+    message:'how can i help you'}
+  ])
+  async function handleSubmit(e){
+    e.preventDefault()
+   
+    setChatLog([...chatLog,{message:`${input}`}])
+    setInput("")
+    //  console.log(input)
+    const response=await fetch("http://localhost:4000",{
+      method:'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        message:chatLog.map((message)=>
+          message.message
+        )
+      })
+    })
+
+    const data=await response.json();
+    setChatLog([{message:`${data.message}`}])
+    console.log(data.message);
+
+
+  }
+ 
   return (
     <div className=" App-header flex flex-row w-screen">
       <aside className='w-[250px]  h-[100vh] bg-[#1c1f24] px-2 pt-4'>
@@ -15,25 +46,24 @@ function App() {
         <div className='pt-[24px] '>
           <div className='chat-message  flex flex-row items-center space-x-4 px-[150px] p-4 text-lg'>
             <div className='avator bg-white rounded-md w-[50px] h-[50px]'></div>
-            <div className='message'> Hello world</div>
+            <div className='message'> {input}</div>
           </div>
 
         </div>
-        <div className='pt-[24px] '>
-          <div className='chat-message  flex flex-row items-center space-x-4 bg-[#444654] px-[150px] p-4 text-lg'>
-            <div className='avator bg-[#0da37f] rounded-md items-center flex flex-col justify-center w-[50px] h-[50px]'>
-              <SvgComponent/>
-            </div>
-            <div className='message'> Hello world</div>
-          </div>
-
-        </div>
+        {
+          chatLog.map((message=><ChatMessage message={message}/>))
+        }
 
 
-        <div className='chatInputHolder items-center   absolute bottom-6 justify-center flex flex-row'>
+        <div >
           {/* <input type="text" className='bg-[#40414f]' /> */}
-          <textarea name="" id="" rows='1' className='bg-[#40414f] border-0 outline-none  w-full rounded-[5px]  items-center justify-start px-3 py-[12px] text-lg'  ></textarea>
 
+          <form onSubmit={handleSubmit} className='chatInputHolder items-center   absolute bottom-6 justify-center flex flex-row space-x-2'>
+            <input name="" input={input} onChange={(e)=>{
+              setInput(e.target.value)
+            }} rows='1' className='bg-[#40414f] border-0 outline-none  w-full rounded-[5px]  items-center justify-start px-3 py-[12px] text-lg'  />
+            <button type='submit'><RxPaperPlane size={24}/></button>
+          </form>
         </div>
 
       </section>
